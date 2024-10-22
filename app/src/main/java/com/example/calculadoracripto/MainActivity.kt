@@ -35,6 +35,12 @@ class MainActivity : AppCompatActivity() {
         bitcoinIcon = findViewById(R.id.btc) // Inicializa el ImageView de Bitcoin
         clearButton = findViewById(R.id.buttonErre) // Inicializa el botón CE
 
+        // Deshabilitar entrada por teclado
+        display.isFocusable = false
+        display.isFocusableInTouchMode = false
+        resultView.isFocusable = false
+        resultView.isFocusableInTouchMode = false
+
         // Inicializa Retrofit
         retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -85,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun convertUsdToBtc() {
-        val usdAmount = display.text.toString().toDoubleOrNull()
+        val usdAmount = display.text.toString().replace(".", "").toDoubleOrNull()
 
         if (usdAmount == null || usdAmount == 0.0 || currentBtcPrice == null) {
             Toast.makeText(this, "Introduce una cantidad válida y asegúrate de haber obtenido el precio de Bitcoin.", Toast.LENGTH_SHORT).show()
@@ -94,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
         // Realiza la conversión y muestra el resultado en criptoSolution
         val btcResult = usdAmount / currentBtcPrice!!
-        resultView.setText(btcResult.toString())
+        resultView.setText(btcResult.toString()) // Muestra el resultado sin formatear
     }
 
     private fun showPriceDialog(price: Double) {
@@ -127,12 +133,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun appendNumberToDisplay(number: String) {
-        if (display.text.toString() == "0") {
+        // Si el campo está vacío o es "0", reemplaza el texto
+        if (display.text.toString() == "0" || display.text.isEmpty()) {
             display.setText(number)
         } else {
+            // Añade el número al final del texto actual
             display.setText(display.text.toString() + number)
         }
-        display.setSelection(display.text.length)
+        // Aplica el formato con puntos
+        display.setText(formatWithDots(display.text.toString()))
+        display.setSelection(display.text.length) // Mantén el cursor al final
+    }
+
+    private fun formatWithDots(value: String): String {
+        return if (value.isNotEmpty()) {
+            val number = value.replace(".", "").toLongOrNull() ?: 0
+            String.format("%,d", number).replace(",", ".")
+        } else {
+            "0"
+        }
     }
 
     // Define la interfaz para la API
