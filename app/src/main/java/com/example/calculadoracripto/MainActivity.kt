@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultView: EditText
     private lateinit var bitcoinIcon: ImageView
     private lateinit var clearButton: Button
+    private lateinit var eraseButton: Button  // Cambia el nombre para mayor claridad
     private lateinit var decimalButton: Button
     private val BASE_URL = "https://api.coingecko.com/api/v3/"
     private lateinit var retrofit: Retrofit
@@ -40,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         display = findViewById(R.id.text1)
         resultView = findViewById(R.id.criptoSolution)
         bitcoinIcon = findViewById(R.id.btc)
-        clearButton = findViewById(R.id.buttonErre)
+        clearButton = findViewById(R.id.buttonCE) // Asegúrate de que este es el botón CE
+        eraseButton = findViewById(R.id.buttonErre)  // Botón para borrar de uno en uno
         decimalButton = findViewById(R.id.buttonComa)
 
         display.isFocusable = false
@@ -63,6 +65,10 @@ class MainActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             clearInput()
+        }
+
+        eraseButton.setOnClickListener {
+            eraseLastCharacter()
         }
 
         decimalButton.setOnClickListener {
@@ -101,9 +107,15 @@ class MainActivity : AppCompatActivity() {
                 display.setSelection(formatted.length)
                 isFormatting = false
             }
-
         })
+    }
 
+    private fun eraseLastCharacter() {
+        val currentText = display.text.toString()
+        if (currentText.isNotEmpty()) {
+            display.setText(currentText.substring(0, currentText.length - 1))
+            display.setSelection(display.text.length) // Mantiene el cursor al final
+        }
     }
 
     private fun appendDecimalToDisplay() {
@@ -121,10 +133,6 @@ class MainActivity : AppCompatActivity() {
             display.setSelection(display.text.length) // Mantén el cursor al final
         }
     }
-
-
-
-
 
     private fun fetchBitcoinPrice() {
         val call = bitcoinApi.getBitcoinPrice("bitcoin")
@@ -197,8 +205,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun appendNumberToDisplay(number: String) {
         val currentText = display.text.toString()
 
@@ -215,7 +221,6 @@ class MainActivity : AppCompatActivity() {
 
         display.setSelection(display.text.length)
     }
-
 
     private fun formatWithDotsAndCommas(value: String): String {
         val symbols = DecimalFormatSymbols(Locale.getDefault()).apply {
