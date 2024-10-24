@@ -25,13 +25,73 @@ class MainActivity : AppCompatActivity() {
     private lateinit var display: EditText
     private lateinit var resultView: EditText
     private lateinit var bitcoinIcon: ImageView
+    private lateinit var ethereumIcon: ImageView // Añadido para Ethereum
     private lateinit var clearButton: Button
-    private lateinit var eraseButton: Button  // Cambia el nombre para mayor claridad
+    private lateinit var eraseButton: Button
     private lateinit var decimalButton: Button
     private val BASE_URL = "https://api.coingecko.com/api/v3/"
     private lateinit var retrofit: Retrofit
-    private lateinit var bitcoinApi: BitcoinApi
+    private lateinit var cryptoApi: CryptoApi // Ahora general para ambas criptos
     private var currentBtcPrice: Double? = null
+    private var currentEthPrice: Double? = null // Precio de Ethereum
+    interface CryptoApi {
+        @GET("simple/price")
+        fun getCryptoPrice(
+            @Query("ids") ids: String,
+            @Query("vs_currencies") vs: String = "usd"
+        ): Call<Map<String, Map<String, Double>>> // Cambiado el tipo de respuesta
+    }
+
+    private fun fetchCryptoPrices() {
+        val bitcoinCall = cryptoApi.getCryptoPrice("bitcoin")
+        val ethereumCall = cryptoApi.getCryptoPrice("ethereum")
+
+        bitcoinCall.enqueue(object : Callback<Map<String, Map<String, Double>>> {
+            override fun onResponse(
+                call: Call<Map<String, Map<String, Double>>>,
+                response: Response<Map<String, Map<String, Double>>>
+            ) {
+                if (response.isSuccessful) {
+                    currentBtcPrice = response.body()?.get("bitcoin")?.get("usd")
+                    if (currentBtcPrice != null) {
+                        showPriceDialog("Bitcoin", currentBtcPrice!!)
+                    } else {
+                        Toast.makeText(this@MainActivity, "Error: el precio de Bitcoin no está disponible.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Error al obtener el precio de Bitcoin: ${response.errorBody()?.string()}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        ethereumCall.enqueue(object : Callback<Map<String, Map<String, Double>>> {
+            override fun onResponse(
+                call: Call<Map<String, Map<String, Double>>>,
+                response: Response<Map<String, Map<String, Double>>>
+            ) {
+                if (response.isSuccessful) {
+                    currentEthPrice = response.body()?.get("ethereum")?.get("usd")
+                    if (currentEthPrice != null) {
+                        showPriceDialog("Ethereum", currentEthPrice!!)
+                    } else {
+                        Toast.makeText(this@MainActivity, "Error: el precio de Ethereum no está disponible.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Error al obtener el precio de Ethereum: ${response.errorBody()?.string()}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
     private var decimalPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +101,9 @@ class MainActivity : AppCompatActivity() {
         display = findViewById(R.id.text1)
         resultView = findViewById(R.id.criptoSolution)
         bitcoinIcon = findViewById(R.id.btc)
-        clearButton = findViewById(R.id.buttonCE) // Asegúrate de que este es el botón CE
-        eraseButton = findViewById(R.id.buttonErre)  // Botón para borrar de uno en uno
+        ethereumIcon = findViewById(R.id.eth) // Inicializa el icono de Ethereum
+        clearButton = findViewById(R.id.buttonCE)
+        eraseButton = findViewById(R.id.buttonErre)
         decimalButton = findViewById(R.id.buttonComa)
 
         display.isFocusable = false
@@ -55,12 +116,16 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        bitcoinApi = retrofit.create(BitcoinApi::class.java)
+        cryptoApi = retrofit.create(CryptoApi::class.java)
 
-        fetchBitcoinPrice()
+        fetchCryptoPrices()
 
         bitcoinIcon.setOnClickListener {
-            convertUsdToBtc()
+            convertUsdToCrypto(currentBtcPrice)
+        }
+
+        ethereumIcon.setOnClickListener {
+            convertUsdToCrypto(currentEthPrice) // Conversión para Ethereum
         }
 
         clearButton.setOnClickListener {
@@ -89,12 +154,10 @@ class MainActivity : AppCompatActivity() {
 
                 val currentText = s.toString()
 
-                // Si el texto termina en coma, no formateamos inmediatamente
                 if (currentText.endsWith(",")) {
                     return
                 }
 
-                // Limitar a 2 dígitos después de la coma
                 val parts = currentText.split(",")
                 if (parts.size > 1 && parts[1].length > 2) {
                     s?.delete(s.length - 1, s.length)
@@ -114,65 +177,39 @@ class MainActivity : AppCompatActivity() {
         val currentText = display.text.toString()
         if (currentText.isNotEmpty()) {
             display.setText(currentText.substring(0, currentText.length - 1))
-            display.setSelection(display.text.length) // Mantiene el cursor al final
+            display.setSelection(display.text.length)
         }
     }
 
     private fun appendDecimalToDisplay() {
         val currentText = display.text.toString()
 
-        // Verificamos si ya hay una coma o si está vacío
         if (!currentText.contains(",")) {
             if (currentText.isEmpty()) {
-                // Si está vacío, añadimos "0,"
                 display.setText("0,")
             } else {
-                // Si ya hay números, añadimos la coma al final
                 display.setText(currentText + ",")
             }
-            display.setSelection(display.text.length) // Mantén el cursor al final
+            display.setSelection(display.text.length)
         }
     }
 
-    private fun fetchBitcoinPrice() {
-        val call = bitcoinApi.getBitcoinPrice("bitcoin")
-
-        call.enqueue(object : Callback<BitcoinPriceResponse> {
-            override fun onResponse(call: Call<BitcoinPriceResponse>, response: Response<BitcoinPriceResponse>) {
-                if (response.isSuccessful) {
-                    currentBtcPrice = response.body()?.bitcoin?.usd
-                    if (currentBtcPrice != null) {
-                        showPriceDialog(currentBtcPrice!!)
-                    } else {
-                        Toast.makeText(this@MainActivity, "Error: el precio de Bitcoin no está disponible.", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(this@MainActivity, "Error al obtener el precio de Bitcoin: ${response.errorBody()?.string()}", Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onFailure(call: Call<BitcoinPriceResponse>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    private fun convertUsdToBtc() {
+    private fun convertUsdToCrypto(cryptoPrice: Double?) {
         val usdAmount = display.text.toString().replace(",", ".").replace(".", "").toDoubleOrNull()
 
-        if (usdAmount == null || usdAmount == 0.0 || currentBtcPrice == null) {
-            Toast.makeText(this, "Introduce una cantidad válida y asegúrate de haber obtenido el precio de Bitcoin.", Toast.LENGTH_SHORT).show()
+        if (usdAmount == null || usdAmount == 0.0 || cryptoPrice == null) {
+            Toast.makeText(this, "Introduce una cantidad válida y asegúrate de haber obtenido el precio de la criptomoneda.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val btcResult = usdAmount / currentBtcPrice!!
-        resultView.setText(btcResult.toString())
+        val cryptoResult = usdAmount / cryptoPrice
+        resultView.setText(cryptoResult.toString())
     }
 
-    private fun showPriceDialog(price: Double) {
+    private fun showPriceDialog(cryptoName: String, price: Double) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Precio de Bitcoin")
-        builder.setMessage("El precio actual de Bitcoin es: $${price}")
+        builder.setTitle("Precio de $cryptoName")
+        builder.setMessage("El precio actual de $cryptoName es: $${price}")
         builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
         builder.show()
     }
@@ -198,17 +235,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Añadir el listener para el botón de coma
         val decimalButton = findViewById<Button>(R.id.buttonComa)
         decimalButton.setOnClickListener {
-            appendDecimalToDisplay() // Llama a la función que añade la coma
+            appendDecimalToDisplay()
         }
     }
 
     private fun appendNumberToDisplay(number: String) {
         val currentText = display.text.toString()
 
-        // Si ya hay una coma y 2 dígitos después de ella, no añadir más
         if (currentText.contains(",") && currentText.split(",")[1].length >= 2) {
             return
         }
@@ -241,16 +276,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    interface BitcoinApi {
-        @GET("simple/price")
-        fun getBitcoinPrice(@Query("ids") ids: String, @Query("vs_currencies") vs_currencies: String = "usd"): Call<BitcoinPriceResponse>
-    }
 
-    data class BitcoinPriceResponse(
-        val bitcoin: BitcoinData
-    )
 
-    data class BitcoinData(
-        val usd: Double
-    )
+    data class CryptoPriceResponse(val crypto: CryptoPrice)
+    data class CryptoPrice(val usd: Double)
 }

@@ -397,7 +397,6 @@
         app:layout_constraintTop_toTopOf="@+id/guideline12" />
 
 
-
     <ImageView
         android:id="@+id/btc"
         android:layout_width="0dp"
@@ -408,6 +407,16 @@
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="@+id/guideline10"
         app:srcCompat="@drawable/bitcoin_btc_logo" />
+
+    <ImageView
+        android:id="@+id/eth"
+        android:layout_width="72dp"
+        android:layout_height="92dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline11"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/guideline10"
+        app:srcCompat="@drawable/ethereum_eth_icon" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
