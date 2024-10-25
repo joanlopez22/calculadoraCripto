@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bitcoinIcon: ImageView
     private lateinit var ethereumIcon: ImageView
     private lateinit var cardanoIcon: ImageView // Añadido para Cardano
+    private lateinit var solanaIcon: ImageView // Añadido para Solana
     private lateinit var clearButton: Button
     private lateinit var eraseButton: Button
     private lateinit var decimalButton: Button
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private var currentBtcPrice: Double? = null
     private var currentEthPrice: Double? = null
     private var currentAdaPrice: Double? = null // Precio de Cardano
+    private var currentSolPrice: Double? = null // Precio de Solana
 
     interface CryptoApi {
         @GET("simple/price")
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         val bitcoinCall = cryptoApi.getCryptoPrice("bitcoin")
         val ethereumCall = cryptoApi.getCryptoPrice("ethereum")
         val cardanoCall = cryptoApi.getCryptoPrice("cardano") // Petición para Cardano
+        val solanaCall = cryptoApi.getCryptoPrice("solana") // Petición para Solana
 
         bitcoinCall.enqueue(object : Callback<Map<String, Map<String, Double>>> {
             override fun onResponse(
@@ -115,6 +118,28 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+
+        solanaCall.enqueue(object : Callback<Map<String, Map<String, Double>>> {
+            override fun onResponse(
+                call: Call<Map<String, Map<String, Double>>>,
+                response: Response<Map<String, Map<String, Double>>>
+            ) {
+                if (response.isSuccessful) {
+                    currentSolPrice = response.body()?.get("solana")?.get("usd")
+                    if (currentSolPrice != null) {
+                        showPriceDialog("Solana", currentSolPrice!!)
+                    } else {
+                        Toast.makeText(this@MainActivity, "Error: el precio de Solana no está disponible.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Error al obtener el precio de Solana: ${response.errorBody()?.string()}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private var decimalPressed = false
@@ -131,6 +156,7 @@ class MainActivity : AppCompatActivity() {
         clearButton = findViewById(R.id.buttonCE)
         eraseButton = findViewById(R.id.buttonErre)
         decimalButton = findViewById(R.id.buttonComa)
+        solanaIcon = findViewById(R.id.sol) // Inicializa el icono de Solana
 
         display.isFocusable = false
         display.isFocusableInTouchMode = false
@@ -149,7 +175,9 @@ class MainActivity : AppCompatActivity() {
         bitcoinIcon.setOnClickListener {
             convertUsdToCrypto(currentBtcPrice)
         }
-
+        solanaIcon.setOnClickListener {
+            convertUsdToCrypto(currentSolPrice) // Conversión para Solana
+        }
         ethereumIcon.setOnClickListener {
             convertUsdToCrypto(currentEthPrice)
         }

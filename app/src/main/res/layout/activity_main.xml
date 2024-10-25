@@ -149,7 +149,7 @@
         android:paddingBottom="4dp"
         android:text="R"
         android:textColor="@android:color/black"
-        android:textSize="15sp"
+        android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -168,7 +168,7 @@
         android:paddingBottom="4dp"
         android:text="CE"
         android:textColor="@android:color/black"
-        android:textSize="15sp"
+        android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -427,6 +427,16 @@
         app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="@+id/guideline10"
         app:srcCompat="@drawable/cardano_ada_logo" />
+
+    <ImageView
+        android:id="@+id/sol"
+        android:layout_width="72dp"
+        android:layout_height="92dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline11"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline6"
+        app:layout_constraintTop_toTopOf="@+id/guideline10"
+        app:srcCompat="@drawable/solana_sol_logo_12828ad23d_seeklogo_com" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
