@@ -418,5 +418,15 @@
         app:layout_constraintTop_toTopOf="@+id/guideline10"
         app:srcCompat="@drawable/ethereum_eth_icon" />
 
+    <ImageView
+        android:id="@+id/car"
+        android:layout_width="72dp"
+        android:layout_height="92dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline11"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
+        app:layout_constraintTop_toTopOf="@+id/guideline10"
+        app:srcCompat="@drawable/cardano_ada_logo" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,26 +25,30 @@ class MainActivity : AppCompatActivity() {
     private lateinit var display: EditText
     private lateinit var resultView: EditText
     private lateinit var bitcoinIcon: ImageView
-    private lateinit var ethereumIcon: ImageView // Añadido para Ethereum
+    private lateinit var ethereumIcon: ImageView
+    private lateinit var cardanoIcon: ImageView // Añadido para Cardano
     private lateinit var clearButton: Button
     private lateinit var eraseButton: Button
     private lateinit var decimalButton: Button
     private val BASE_URL = "https://api.coingecko.com/api/v3/"
     private lateinit var retrofit: Retrofit
-    private lateinit var cryptoApi: CryptoApi // Ahora general para ambas criptos
+    private lateinit var cryptoApi: CryptoApi
     private var currentBtcPrice: Double? = null
-    private var currentEthPrice: Double? = null // Precio de Ethereum
+    private var currentEthPrice: Double? = null
+    private var currentAdaPrice: Double? = null // Precio de Cardano
+
     interface CryptoApi {
         @GET("simple/price")
         fun getCryptoPrice(
             @Query("ids") ids: String,
             @Query("vs_currencies") vs: String = "usd"
-        ): Call<Map<String, Map<String, Double>>> // Cambiado el tipo de respuesta
+        ): Call<Map<String, Map<String, Double>>>
     }
 
     private fun fetchCryptoPrices() {
         val bitcoinCall = cryptoApi.getCryptoPrice("bitcoin")
         val ethereumCall = cryptoApi.getCryptoPrice("ethereum")
+        val cardanoCall = cryptoApi.getCryptoPrice("cardano") // Petición para Cardano
 
         bitcoinCall.enqueue(object : Callback<Map<String, Map<String, Double>>> {
             override fun onResponse(
@@ -89,8 +93,29 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
-    }
 
+        cardanoCall.enqueue(object : Callback<Map<String, Map<String, Double>>> {
+            override fun onResponse(
+                call: Call<Map<String, Map<String, Double>>>,
+                response: Response<Map<String, Map<String, Double>>>
+            ) {
+                if (response.isSuccessful) {
+                    currentAdaPrice = response.body()?.get("cardano")?.get("usd")
+                    if (currentAdaPrice != null) {
+                        showPriceDialog("Cardano", currentAdaPrice!!)
+                    } else {
+                        Toast.makeText(this@MainActivity, "Error: el precio de Cardano no está disponible.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Error al obtener el precio de Cardano: ${response.errorBody()?.string()}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
     private var decimalPressed = false
 
@@ -101,7 +126,8 @@ class MainActivity : AppCompatActivity() {
         display = findViewById(R.id.text1)
         resultView = findViewById(R.id.criptoSolution)
         bitcoinIcon = findViewById(R.id.btc)
-        ethereumIcon = findViewById(R.id.eth) // Inicializa el icono de Ethereum
+        ethereumIcon = findViewById(R.id.eth)
+        cardanoIcon = findViewById(R.id.car) // Inicializa el icono de Cardano
         clearButton = findViewById(R.id.buttonCE)
         eraseButton = findViewById(R.id.buttonErre)
         decimalButton = findViewById(R.id.buttonComa)
@@ -125,7 +151,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         ethereumIcon.setOnClickListener {
-            convertUsdToCrypto(currentEthPrice) // Conversión para Ethereum
+            convertUsdToCrypto(currentEthPrice)
+        }
+
+        cardanoIcon.setOnClickListener {
+            convertUsdToCrypto(currentAdaPrice) // Conversión para Cardano
         }
 
         clearButton.setOnClickListener {
@@ -222,38 +252,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun setNumberButtonListeners() {
         val numberButtons = listOf(
-            R.id.button0, R.id.button1, R.id.button2,
-            R.id.button3, R.id.button4, R.id.button5,
-            R.id.button6, R.id.button7, R.id.button8,
-            R.id.button9
+            R.id.button0, R.id.button1, R.id.button2, R.id.button3,
+            R.id.button4, R.id.button5, R.id.button6, R.id.button7,
+            R.id.button8, R.id.button9
         )
 
         for (buttonId in numberButtons) {
-            val button = findViewById<Button>(buttonId)
-            button.setOnClickListener {
-                appendNumberToDisplay(button.text.toString())
+            findViewById<Button>(buttonId).setOnClickListener {
+                appendNumberToDisplay((it as Button).text.toString())
             }
-        }
-
-        val decimalButton = findViewById<Button>(R.id.buttonComa)
-        decimalButton.setOnClickListener {
-            appendDecimalToDisplay()
         }
     }
 
     private fun appendNumberToDisplay(number: String) {
         val currentText = display.text.toString()
-
-        if (currentText.contains(",") && currentText.split(",")[1].length >= 2) {
-            return
-        }
-
-        if (currentText == "0" || currentText.isEmpty()) {
-            display.setText(number)
-        } else {
-            display.setText(currentText + number)
-        }
-
+        display.setText(currentText + number)
         display.setSelection(display.text.length)
     }
 
@@ -277,7 +290,4 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-    data class CryptoPriceResponse(val crypto: CryptoPrice)
-    data class CryptoPrice(val usd: Double)
 }
