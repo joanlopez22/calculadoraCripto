@@ -55,14 +55,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="107dp" />
+        app:layout_constraintGuide_begin="69dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9001368" />
+        app:layout_constraintGuide_percent="1.0" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline10"
@@ -83,21 +83,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.54" />
+        app:layout_constraintGuide_percent="0.56" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.66" />
+        app:layout_constraintGuide_percent="0.7" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.78" />
+        app:layout_constraintGuide_percent="0.85" />
 
     <EditText
         android:id="@+id/text1"
@@ -132,10 +132,10 @@
         android:textColorHighlight="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/guideline10"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintHorizontal_bias="0.349"
+        app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:layout_constraintVertical_bias="0.442" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/buttonErre"
@@ -151,29 +151,11 @@
         android:textColor="@android:color/black"
         android:textSize="20dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guideline13"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toTopOf="@+id/guideline12" />
-
-    <Button
-        android:id="@+id/buttonidioma"
-        android:layout_width="72dp"
-        android:layout_height="78dp"
-        android:backgroundTint="#A6A3A3"
-        android:gravity="center"
-        android:paddingLeft="6dp"
-        android:paddingTop="4dp"
-        android:paddingRight="6dp"
-        android:paddingBottom="4dp"
-        android:text="IDIOMA"
-        android:textColor="@android:color/black"
-        android:textSize="10dp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toTopOf="@+id/guideline13" />
+        app:layout_constraintTop_toTopOf="@+id/guideline12"
+        app:layout_constraintVertical_bias="0.757" />
 
     <Button
         android:id="@+id/buttonCE"
@@ -192,7 +174,8 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toTopOf="@+id/guideline11" />
+        app:layout_constraintTop_toTopOf="@+id/guideline11"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button1"
@@ -358,8 +341,8 @@
 
     <Button
         android:id="@+id/buttonComa"
-        android:layout_width="72dp"
-        android:layout_height="78dp"
+        android:layout_width="99dp"
+        android:layout_height="51dp"
         android:backgroundTint="#565252"
         android:gravity="center"
         android:paddingLeft="6dp"
@@ -429,8 +412,8 @@
 
     <ImageView
         android:id="@+id/eth"
-        android:layout_width="72dp"
-        android:layout_height="92dp"
+        android:layout_width="53dp"
+        android:layout_height="55dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -439,8 +422,8 @@
 
     <ImageView
         android:id="@+id/car"
-        android:layout_width="72dp"
-        android:layout_height="92dp"
+        android:layout_width="52dp"
+        android:layout_height="65dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -449,8 +432,8 @@
 
     <ImageView
         android:id="@+id/sol"
-        android:layout_width="72dp"
-        android:layout_height="92dp"
+        android:layout_width="54dp"
+        android:layout_height="62dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline6"

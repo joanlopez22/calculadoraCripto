@@ -26,8 +26,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultView: EditText
     private lateinit var bitcoinIcon: ImageView
     private lateinit var ethereumIcon: ImageView
-    private lateinit var cardanoIcon: ImageView // Añadido para Cardano
-    private lateinit var solanaIcon: ImageView // Añadido para Solana
+    private lateinit var cardanoIcon: ImageView // Afegit per Cardano
+    private lateinit var solanaIcon: ImageView // Afegit per Solana
     private lateinit var clearButton: Button
     private lateinit var eraseButton: Button
     private lateinit var decimalButton: Button
@@ -36,12 +36,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cryptoApi: CryptoApi
     private var currentBtcPrice: Double? = null
     private var currentEthPrice: Double? = null
-    private var currentAdaPrice: Double? = null // Precio de Cardano
-    private var currentSolPrice: Double? = null // Precio de Solana
+    private var currentAdaPrice: Double? = null // Preu de Cardano
+    private var currentSolPrice: Double? = null // Preu de Solana
     private var selectedCryptoPrice: Double? = null
-
-
-
 
     interface CryptoApi {
         @GET("simple/price")
@@ -54,8 +51,8 @@ class MainActivity : AppCompatActivity() {
     private fun fetchCryptoPrices() {
         val bitcoinCall = cryptoApi.getCryptoPrice("bitcoin")
         val ethereumCall = cryptoApi.getCryptoPrice("ethereum")
-        val cardanoCall = cryptoApi.getCryptoPrice("cardano") // Petición para Cardano
-        val solanaCall = cryptoApi.getCryptoPrice("solana") // Petición para Solana
+        val cardanoCall = cryptoApi.getCryptoPrice("cardano") // Petició per Cardano
+        val solanaCall = cryptoApi.getCryptoPrice("solana") // Petició per Solana
 
         bitcoinCall.enqueue(object : Callback<Map<String, Map<String, Double>>> {
             override fun onResponse(
@@ -67,15 +64,15 @@ class MainActivity : AppCompatActivity() {
                     if (currentBtcPrice != null) {
                         showPriceDialog("Bitcoin", currentBtcPrice!!)
                     } else {
-                        Snackbar.make(display, "Error: el precio de Bitcoin no está disponible.", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(display, "Error: Bitcoin price not available.", Snackbar.LENGTH_SHORT).show()
                     }
                 } else {
-                    Snackbar.make(display, "Error: el precio de Bitcoin no está disponible.", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(display, "Error: Bitcoin price not available.", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
-                Snackbar.make(display, "Error de conexion.", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(display, "Connection error.", Snackbar.LENGTH_SHORT).show()
             }
         })
 
@@ -89,15 +86,15 @@ class MainActivity : AppCompatActivity() {
                     if (currentEthPrice != null) {
                         showPriceDialog("Ethereum", currentEthPrice!!)
                     } else {
-                        Toast.makeText(this@MainActivity, "Error: el precio de Ethereum no está disponible.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Error: Ethereum price not available.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Snackbar.make(display, "Error: el precio de Etherum no está disponible.", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(display, "Error: Ethereum price not available.", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
-                Snackbar.make(display, "Error de conexion.", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(display, "Connection error.", Snackbar.LENGTH_SHORT).show()
             }
         })
 
@@ -111,15 +108,15 @@ class MainActivity : AppCompatActivity() {
                     if (currentAdaPrice != null) {
                         showPriceDialog("Cardano", currentAdaPrice!!)
                     } else {
-                        Toast.makeText(this@MainActivity, "Error: el precio de Cardano no está disponible.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Error: Cardano price not available.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Snackbar.make(display, "Error al obtener el precio de Cardano.", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(display, "Error fetching Cardano price.", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
-                Snackbar.make(display, "Error de conexion.", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(display, "Connection error.", Snackbar.LENGTH_SHORT).show()
             }
         })
 
@@ -133,15 +130,15 @@ class MainActivity : AppCompatActivity() {
                     if (currentSolPrice != null) {
                         showPriceDialog("Solana", currentSolPrice!!)
                     } else {
-                        Toast.makeText(this@MainActivity, "Error: el precio de Solana no está disponible.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Error: Solana price not available.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Snackbar.make(display, "Error: el precio de Solana no está disponible.", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(display, "Error: Solana price not available.", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
-                Snackbar.make(display, "Error de conexion", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(display, "Connection error", Snackbar.LENGTH_SHORT).show()
             }
         })
     }
@@ -156,11 +153,11 @@ class MainActivity : AppCompatActivity() {
         resultView = findViewById(R.id.criptoSolution)
         bitcoinIcon = findViewById(R.id.btc)
         ethereumIcon = findViewById(R.id.eth)
-        cardanoIcon = findViewById(R.id.car) // Inicializa el icono de Cardano
+        cardanoIcon = findViewById(R.id.car) // Inicialitza l'icona de Cardano
         clearButton = findViewById(R.id.buttonCE)
         eraseButton = findViewById(R.id.buttonErre)
         decimalButton = findViewById(R.id.buttonComa)
-        solanaIcon = findViewById(R.id.sol) // Inicializa el icono de Solana
+        solanaIcon = findViewById(R.id.sol) // Inicialitza l'icona de Solana
 
         display.isFocusable = false
         display.isFocusableInTouchMode = false
@@ -193,7 +190,6 @@ class MainActivity : AppCompatActivity() {
             convertUsdToCrypto(selectedCryptoPrice)
         }
 
-
         clearButton.setOnClickListener {
             clearInput()
         }
@@ -225,7 +221,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val parts = currentText.split(",")
-                if (parts.size > 1 && parts[1].length > 6) {
+                if (parts.size > 1 && parts[1].length > 2) {
                     s?.delete(s.length - 1, s.length)
                     return
                 }
@@ -235,8 +231,11 @@ class MainActivity : AppCompatActivity() {
                 display.setText(formatted)
                 display.setSelection(formatted.length)
                 isFormatting = false
+
+                convertUsdToCrypto(selectedCryptoPrice)
             }
         })
+
     }
 
     private fun eraseLastCharacter() {
@@ -254,61 +253,43 @@ class MainActivity : AppCompatActivity() {
             if (currentText.isEmpty()) {
                 display.setText("0,")
             } else {
-                display.setText(currentText + ",")
+                display.setText("$currentText,")
             }
-            display.setSelection(display.text.length)
+            decimalPressed = true
         }
+    }
+
+    private fun clearInput() {
+        display.setText("")
+        resultView.setText("")
+        decimalPressed = false
     }
 
     private fun convertUsdToCrypto(cryptoPrice: Double?) {
         val usdAmount = display.text.toString().replace(",", ".").replace(".", "").toDoubleOrNull()
 
         if (usdAmount == null || usdAmount == 0.0 || cryptoPrice == null) {
-            Toast.makeText(this, "Introduce una cantidad válida y asegúrate de haber obtenido el precio de la criptomoneda.", Toast.LENGTH_SHORT).show()
+            Snackbar.make(display, "You should select a crypto to start converting", Snackbar.LENGTH_SHORT).show()
             return
         }
 
         val cryptoResult = usdAmount / cryptoPrice
-        resultView.setText(cryptoResult.toString())
+        // Limitar el resultado a 6 decimales
+        val formattedResult = String.format("%.6f", cryptoResult)
+
+        // Asignar el resultado formateado a resultView
+        resultView.setText(formattedResult)
     }
 
-    private fun showPriceDialog(cryptoName: String, price: Double) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Precio de $cryptoName")
-        builder.setMessage("El precio actual de $cryptoName es: $${price}")
-        builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-        builder.show()
+
+
+
+
+    private fun formatNumber(value: Double): String {
+        val symbols = DecimalFormatSymbols(Locale.US)
+        val formatter = DecimalFormat("#,##0.##########", symbols)
+        return formatter.format(value)
     }
-
-    private fun clearInput() {
-        display.text.clear()
-        resultView.text.clear()
-        decimalPressed = false
-    }
-
-    private fun setNumberButtonListeners() {
-        val numberButtons = listOf(
-            R.id.button0, R.id.button1, R.id.button2, R.id.button3,
-            R.id.button4, R.id.button5, R.id.button6, R.id.button7,
-            R.id.button8, R.id.button9
-        )
-
-        for (buttonId in numberButtons) {
-            findViewById<Button>(buttonId).setOnClickListener {
-                appendNumberToDisplay((it as Button).text.toString())
-            }
-        }
-    }
-
-    private fun appendNumberToDisplay(number: String) {
-        val currentText = display.text.toString()
-        display.setText(currentText + number)
-        display.setSelection(display.text.length)
-
-        // Llama a la conversión después de añadir un número
-        convertUsdToCrypto(selectedCryptoPrice)
-    }
-
 
     private fun formatWithDotsAndCommas(value: String): String {
         val symbols = DecimalFormatSymbols(Locale.getDefault()).apply {
@@ -328,6 +309,37 @@ class MainActivity : AppCompatActivity() {
             "$formattedIntegerPart,$decimalPart"
         }
     }
+    private fun showPriceDialog(cryptoName: String, price: Double) {
+        AlertDialog.Builder(this)
+            .setTitle("$cryptoName Price")
+            .setMessage("Current price: $price USD")
+            .setPositiveButton("OK", null)
+            .show()
+    }
 
+    private fun setNumberButtonListeners() {
+        val numberButtons = listOf(
+            R.id.button0 to "0",
+            R.id.button1 to "1",
+            R.id.button2 to "2",
+            R.id.button3 to "3",
+            R.id.button4 to "4",
+            R.id.button5 to "5",
+            R.id.button6 to "6",
+            R.id.button7 to "7",
+            R.id.button8 to "8",
+            R.id.button9 to "9"
+        )
 
+        for ((buttonId, number) in numberButtons) {
+            findViewById<Button>(buttonId).setOnClickListener {
+                appendNumberToDisplay(number)
+            }
+        }
+    }
+
+    private fun appendNumberToDisplay(number: String) {
+        val currentText = display.text.toString()
+        display.setText(currentText + number)
+    }
 }
