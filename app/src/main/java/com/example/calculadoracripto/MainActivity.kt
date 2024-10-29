@@ -38,6 +38,10 @@ class MainActivity : AppCompatActivity() {
     private var currentEthPrice: Double? = null
     private var currentAdaPrice: Double? = null // Precio de Cardano
     private var currentSolPrice: Double? = null // Precio de Solana
+    private var selectedCryptoPrice: Double? = null
+
+
+
 
     interface CryptoApi {
         @GET("simple/price")
@@ -173,18 +177,22 @@ class MainActivity : AppCompatActivity() {
         fetchCryptoPrices()
 
         bitcoinIcon.setOnClickListener {
-            convertUsdToCrypto(currentBtcPrice)
+            selectedCryptoPrice = currentBtcPrice
+            convertUsdToCrypto(selectedCryptoPrice)
         }
         solanaIcon.setOnClickListener {
-            convertUsdToCrypto(currentSolPrice) // Conversión para Solana
+            selectedCryptoPrice = currentSolPrice
+            convertUsdToCrypto(selectedCryptoPrice)
         }
         ethereumIcon.setOnClickListener {
-            convertUsdToCrypto(currentEthPrice)
+            selectedCryptoPrice = currentEthPrice
+            convertUsdToCrypto(selectedCryptoPrice)
+        }
+        cardanoIcon.setOnClickListener {
+            selectedCryptoPrice = currentAdaPrice
+            convertUsdToCrypto(selectedCryptoPrice)
         }
 
-        cardanoIcon.setOnClickListener {
-            convertUsdToCrypto(currentAdaPrice) // Conversión para Cardano
-        }
 
         clearButton.setOnClickListener {
             clearInput()
@@ -296,7 +304,11 @@ class MainActivity : AppCompatActivity() {
         val currentText = display.text.toString()
         display.setText(currentText + number)
         display.setSelection(display.text.length)
+
+        // Llama a la conversión después de añadir un número
+        convertUsdToCrypto(selectedCryptoPrice)
     }
+
 
     private fun formatWithDotsAndCommas(value: String): String {
         val symbols = DecimalFormatSymbols(Locale.getDefault()).apply {
