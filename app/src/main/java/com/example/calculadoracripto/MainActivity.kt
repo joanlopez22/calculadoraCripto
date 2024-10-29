@@ -1,5 +1,5 @@
 package com.example.calculadoracripto
-
+import com.google.android.material.snackbar.Snackbar
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -67,15 +67,15 @@ class MainActivity : AppCompatActivity() {
                     if (currentBtcPrice != null) {
                         showPriceDialog("Bitcoin", currentBtcPrice!!)
                     } else {
-                        Toast.makeText(this@MainActivity, "Error: el precio de Bitcoin no está disponible.", Toast.LENGTH_SHORT).show()
+                        Snackbar.make(display, "Error: el precio de Bitcoin no está disponible.", Snackbar.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "Error al obtener el precio de Bitcoin: ${response.errorBody()?.string()}", Toast.LENGTH_LONG).show()
+                    Snackbar.make(display, "Error: el precio de Bitcoin no está disponible.", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                Snackbar.make(display, "Error de conexion.", Snackbar.LENGTH_SHORT).show()
             }
         })
 
@@ -92,12 +92,12 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "Error: el precio de Ethereum no está disponible.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "Error al obtener el precio de Ethereum: ${response.errorBody()?.string()}", Toast.LENGTH_LONG).show()
+                    Snackbar.make(display, "Error: el precio de Etherum no está disponible.", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                Snackbar.make(display, "Error de conexion.", Snackbar.LENGTH_SHORT).show()
             }
         })
 
@@ -114,12 +114,12 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "Error: el precio de Cardano no está disponible.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "Error al obtener el precio de Cardano: ${response.errorBody()?.string()}", Toast.LENGTH_LONG).show()
+                    Snackbar.make(display, "Error al obtener el precio de Cardano.", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                Snackbar.make(display, "Error de conexion.", Snackbar.LENGTH_SHORT).show()
             }
         })
 
@@ -136,12 +136,12 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "Error: el precio de Solana no está disponible.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "Error al obtener el precio de Solana: ${response.errorBody()?.string()}", Toast.LENGTH_LONG).show()
+                    Snackbar.make(display, "Error: el precio de Solana no está disponible.", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                Snackbar.make(display, "Error de conexion", Snackbar.LENGTH_SHORT).show()
             }
         })
     }
@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val parts = currentText.split(",")
-                if (parts.size > 1 && parts[1].length > 2) {
+                if (parts.size > 1 && parts[1].length > 6) {
                     s?.delete(s.length - 1, s.length)
                     return
                 }
